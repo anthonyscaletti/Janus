@@ -1,0 +1,53 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html {
+    background-color: #8E001C;
+}
+
+body {
+    background-color: #FFB302;
+    margin: 5%;
+    height: 100vh;
+}
+
+h1, h3, p {
+    font-family: Petrona, sans-serif;
+}
+
+hr {
+    border: 1px solid #8E001C;
+    margin: 0 5% 0 5%
+}
+
+.mainContainer {
+    color: #8E001C;
+}
+
+.header {
+    text-align: center;
+}
+
+.headerImages {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin: 3% 0 3% 0;
+}
+
+.headerImg {
+    width: 20vw;
+    height: 20vw;
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.about {
+    margin: 3% 30% 3% 30%;
+}
+
+.apiDefinitions {
+    margin: 3% 5% 3% 5%;
+}
