@@ -2,24 +2,34 @@ package resthandler
 
 import (
 	"fmt"
+	"log"
 	"net/http"
+	"os"
 )
 
 //LaunchRestHandler : REST Handler Initialization
 func LaunchRestHandler() {
-	mux := http.NewServeMux()
+	const defaultPort string = "5000"
+	router := http.NewServeMux()
 
 	//Routes
-	mux.Handle("/", entryHandler())
-	mux.Handle("/entry", entryHandler())
+	router.Handle("/", entryHandler("/"))
+	router.Handle("/entry/", entryHandler("/entry/"))
 
-	fmt.Println("Listening...")
-	http.ListenAndServe(":5000", mux)
+	//Server
+	port := os.Getenv("PORT")
+
+	if port == "" {
+		port = defaultPort
+	}
+
+	log.Println(fmt.Sprintf("Listening at port: %v", port))
+	http.ListenAndServe(fmt.Sprintf(":%v", port), router)
 }
 
 //API Entry Page
-func entryHandler() http.Handler {
-	fs := http.FileServer(http.Dir("../static"))
+func entryHandler(prefix string) http.Handler {
+	fs := http.StripPrefix(prefix, http.FileServer(http.Dir("../static"))) //DEV PATH
 
 	return fs
 }
