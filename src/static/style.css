@@ -10,16 +10,19 @@ html {
 body {
     background-color: #FFB302;
     margin: 5%;
-    height: 100vh;
 }
 
-h1, h3, p {
+h1, h2, h3, h4, p {
     font-family: Petrona, sans-serif;
 }
 
 hr {
     border: 1px solid #8E001C;
     margin: 0 5% 0 5%
+}
+
+li {
+    margin-bottom: 2%;
 }
 
 .mainContainer {
@@ -50,4 +53,22 @@ hr {
 
 .apiDefinitions {
     margin: 3% 5% 3% 5%;
+}
+
+.apiDefinitionsTitle, .dataFormatTitle {
+    margin-bottom: 2%;
+}
+
+.endpoints, .dataFormat, .sampleRequest, .sampleResponse {
+    margin: 0 0 2% 5%;
+}
+
+.codeIndent {
+    margin-left: 3%;
+}
+
+.footer {
+    text-align: center;
+    margin-top: 5%;
+    padding-bottom: 2%;
 }

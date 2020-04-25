@@ -9,7 +9,9 @@ import (
 func LaunchRestHandler() {
 	mux := http.NewServeMux()
 
+	//Routes
 	mux.Handle("/", entryHandler())
+	mux.Handle("/entry", entryHandler())
 
 	fmt.Println("Listening...")
 	http.ListenAndServe(":5000", mux)

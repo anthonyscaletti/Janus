@@ -23,14 +23,70 @@
         </div>
         <div class="about">
             <p>
-                Janus is a Machine Learning API used to conduct future predictions and 
+                Janus is a Machine Learning API used to conduct time series predictions and 
                 forecasting on supplied data. It utilizes a Long Short-Term Memory Recurring 
                 Neural Network model to make these predictions.
             </p>
         </div>
         <hr />
         <div class="apiDefinitions">
-            <h3>API Endpoints</h3>
+            <div class="apiDefinitionsTitle">
+                <h2>API Endpoints:</h2>
+            </div>
+            <div class="endpoints">
+                <ul>
+                    <li>
+                        <h4>GET: "/" : Entry page with Definitions</h4>
+                    </li>
+                    <li>
+                        <h4>GET: "/entry" : Entry page with Definitions</h4>
+                    </li>
+                    <li>
+                        <h4>
+                            POST: "/api/janus" : API Endpoint to execute time series forecasting. 
+                            Supply data via the body of this request in the format defined below.
+                        </h4>
+                    </li>
+                </ul>
+            </div>
+            <div class="dataFormatTitle">
+                <h2>Request Body Data Format:</h2>
+            </div>
+            <div class="dataFormat">
+                <ul>
+                    <li>
+                        <h4>X Axis "x" : An Array containing timestamps in the format MM/DD/YYYY</h4>
+                    </li>
+                    <li>
+                        <h4>Y Axis: "y" : An Array containing historical data mapping to timestamps in the x axis</h4>
+                    </li>
+                    <li>
+                        <h4>Predicted Days Count: "dayCount" : Number of days in the future that you wish to predict</h4>
+                    </li>
+                </ul>
+            </div>
+            <div class="dataFormatTitle">
+                <h2>Sample Request Body:</h2>
+            </div>
+            <div class="sampleRequest">
+                <h3>&#123;</h3>
+                <h3 class="codeIndent">"x": ["04/01/2020", "04/02/2020", "04/03/2020", "04/04/2020", "04/05/2020"],</h3>
+                <h3 class="codeIndent">"y": [1, 2, 3, 4, 5],</h3>
+                <h3 class="codeIndent">"dayCount": 5</h3>
+                <h3>&#125;</h3>
+            </div>
+            <div class="dataFormatTitle">
+                <h2>Sample Response:</h2>
+            </div>
+            <div class="sampleResponse">
+                <h3>&#123;</h3>
+                <h3 class="codeIndent">"x": ["04/06/2020", "04/07/2020", "04/08/2020", "04/09/2020", "04/10/2020"],</h3>
+                <h3 class="codeIndent">"y": [6, 7, 8, 9, 10]</h3>
+                <h3>&#125;</h3>
+            </div>
+            <div class=footer>
+                <h3>Developed by Anthony Scaletti</h3>
+            </div>
         </div>
     </div>
 </body>
