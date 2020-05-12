@@ -3,14 +3,11 @@ package usecase
 import (
 	januscontroller "controller"
 	"entity"
-	"log"
 )
 
 //LaunchJanus : UseCase To Execute Janus Controller
-func LaunchJanus(data *entity.Data) string {
-	log.Println(data)
+func LaunchJanus(data *entity.Data) entity.Data {
+	result := januscontroller.ExecuteJanusEngine(data)
 
-	januscontroller.ExecuteJanusEngine(data)
-
-	return "I GOT IT"
+	return result
 }

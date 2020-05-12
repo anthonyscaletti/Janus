@@ -103,7 +103,7 @@ class Janus:
         pred_value = self.model.predict(x_test)
         pred_value = self.scaler.inverse_transform(pred_value)
 
-        return pred_value[0]
+        return pred_value[0].tolist()
 
     def launch_janus(self):
         #Step1: Initialize Environment Variables
@@ -162,5 +162,6 @@ class Janus:
             self.x_train,
             self.y_train,
             batch_size=self.batch_size,
-            epochs=self.epoch_size)
+            epochs=self.epoch_size,
+            verbose=0)
         self.is_model_trained = True

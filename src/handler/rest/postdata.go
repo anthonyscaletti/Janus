@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"entity"
 	"fmt"
+	"log"
 	"net/http"
 	"usecase"
 )
@@ -26,8 +27,15 @@ func (postDataHandler *PostDataHandler) ServeHTTP(w http.ResponseWriter, r *http
 		return
 	}
 
-	//TODO: Send Data To ML Model
+	//Send Data To Janus Engine
 	response := usecase.LaunchJanus(&data)
-	//TODO: Return Predicted Data as Response
-	fmt.Fprintf(w, "Data: %+v", response)
+
+	//Return Predicted Data as Response
+	dataJSON, err := json.Marshal(response)
+	if err != nil {
+		log.Println("Error Decoding Data: ", err.Error())
+		return
+	}
+
+	fmt.Fprintf(w, string(dataJSON))
 }
