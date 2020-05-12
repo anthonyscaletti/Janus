@@ -88,22 +88,30 @@ class Janus:
         #Get the mean squared error RMSE
         return np.sqrt(np.mean(((predictions- y_test)**2)))
 
-    def predict_next_value(self):
-        #Get last 20 days 
-        last_20_days = self.dataset[-self.n_input:]
-        last_20_days_scaled = self.scaler.transform(last_20_days)
+    def predict_next_values(self, dayCount):
+        predictions = []
+        dataset = self.dataset[-self.n_input:]
 
-        x_test = []
-        x_test.append(last_20_days_scaled) 
+        for i in range(dayCount):
+            #Get last n input days 
+            last_n_days = dataset[-self.n_input:]
+            last_n_days_scaled = self.scaler.transform(last_n_days)
 
-        x_test = np.array(x_test)
-        x_test = np.reshape(x_test, (x_test.shape[0], self.n_input, self.n_features))
+            x_test = []
+            x_test.append(last_n_days_scaled) 
 
-        #Predicted value
-        pred_value = self.model.predict(x_test)
-        pred_value = self.scaler.inverse_transform(pred_value)
+            x_test = np.array(x_test)
+            x_test = np.reshape(x_test, (x_test.shape[0], self.n_input, self.n_features))
 
-        return pred_value[0].tolist()
+            #Predicted value
+            pred_value = self.model.predict(x_test)
+            pred_value = self.scaler.inverse_transform(pred_value)
+            #Append to prediction to dataset
+            temp = dataset.tolist()
+            temp.append(pred_value[0].tolist())
+            dataset = pd.DataFrame(temp).values
+
+        return dataset.tolist()
 
     def launch_janus(self):
         #Step1: Initialize Environment Variables
