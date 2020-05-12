@@ -1,13 +1,23 @@
 package controller
 
 import (
+	"encoding/json"
+	"entity"
 	"fmt"
+	"log"
 	"os/exec"
 )
 
-//LaunchJanusEngine : Launching Janus Python Model
-func LaunchJanusEngine() {
-	cmd := exec.Command("python", "../controller/ai/janus-entry.py", "Test")
+//ExecuteJanusEngine : Launching Janus Python Model
+func ExecuteJanusEngine(data *entity.Data) {
+
+	dataJSON, err := json.Marshal(data)
+	if err != nil {
+		log.Println("Error Encoding Data", err)
+		return
+	}
+
+	cmd := exec.Command("python", "../controller/ai/janus-entry.py", string(dataJSON))
 	out, err := cmd.Output()
 
 	if err != nil {
