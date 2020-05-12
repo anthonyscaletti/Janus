@@ -6,152 +6,161 @@ import numpy as np
 import pandas as pd
 
 class Janus:
-    def __init__(self, rawData, field):
-        self.rawData = rawData
+    def __init__(self, raw_data, field):
+        self.raw_data = raw_data
         self.field = field
-        self.lstmDimentions = 200
-        self.firstDenseLayer = 25
-        self.secondDenseLayer = 1
-        self.batchSize = 64
-        self.epochSize = 64
-        self.dataFrame = pd.DataFrame(rawData)
+        self.lstm_dimentions = 200
+        self.first_dense_layer = 25
+        self.second_dense_layer = 1
+        self.batch_size = 64
+        self.epoch_size = 64
+        self.data_frame = pd.DataFrame(raw_data)
         self.dataset = {}
-        self.trainingDataLen = 0
+        self.training_data_len = 0
         self.scaler = MinMaxScaler(feature_range=(0, 1))
-        self.scaledData = {}
-        self.nInput = 0
-        self.nFeatures = 1
-        self.xTrain = []
-        self.yTrain = []
+        self.scaled_data = {}
+        self.n_input = 0
+        self.n_features = 1
+        self.x_train = []
+        self.y_train = []
         self.model = None
-        self.isModelTrained = False
+        self.is_model_trained = False
 
-    def setField(self, field):
+    def set_Field(self, field):
         self.field = field
 
-    def setLstmDimentions(self, lstmDimentions):
-        self.lstmDimentions = lstmDimentions
+    def set_lstm_dimentions(self, lstm_Dimentions):
+        self.lstm_dimentions = lstm_dimentions
 
-    def setFirstDenseLayer(self, layer):
-        self.firstDenseLayer = layer
+    def set_first_dense_layer(self, layer):
+        self.first_dense_layer = layer
 
-    def setSecondDenseLayer(self, layer):
-        self.secondDenseLayer = layer
+    def set_second_dense_layer(self, layer):
+        self.second_dense_layer = layer
 
-    def setBatchSize(self, size):
-        self.batchSize = size
+    def set_batch_size(self, size):
+        self.batch_size = size
     
-    def setEpochSize(self, size):
-        self.epochSize = size
+    def set_epoch_size(self, size):
+        self.epoch_size = size
 
-    def getField(self):
+    def get_field(self):
         return self.field
 
-    def getLstmDimentions(self):
-        return self.lstmDimentions
+    def get_lstm_dimentions(self):
+        return self.lstm_dimentions
 
-    def getFirstDenseLayer(self):
-        return self.firstDenseLayer
+    def get_first_dense_layer(self):
+        return self.first_dense_layer
 
-    def getSecondDenseLayer(self):
-        return self.secondDenseLayer
+    def get_second_dense_layer(self):
+        return self.second_dense_layer
 
-    def getBatchSize(self):
-        return self.batchSize
+    def get_batch_size(self):
+        return self.batch_size
     
-    def getEpochSize(self):
-        return self.epochSize
+    def get_epoch_size(self):
+        return self.epoch_size
 
-    def isModelTrained(self):
-        return self.isModelTrained
+    def is_model_trained(self):
+        return self.is_model_trained
 
-    def initializeDatasetVariables(self):
-        data = self.dataFrame.filter([self.field])
+    def __get_rmse(self):
+        #Create testing dataset
+        test_data = self.scaled_Data[self.training_data_len - self.n_input:, :]
+        #Create x_test, y_test
+        x_test = []
+        y_test = self.dataset[self.training_data_len:, :]
+
+        for i in range(self.n_input, len(test_Data)):
+            xTest.append(test_data[i - self.n_input:i, 0])
+
+        #Convert data to a numpy array
+        x_test = np.array(x_test)
+
+        #Reshape data to 3 dimentional because LSTM expects 3 dimensional
+        x_test = np.reshape(x_test, (x_test.shape[0], self.n_input, self.n_features))
+
+        #Get model's predicted values
+        predictions = self.model.predict(x_test)
+        predictions = self.scaler.inverse_transform(predictions)
+
+        #Get the mean squared error RMSE
+        return np.sqrt(np.mean(((predictions- y_test)**2)))
+
+    def predict_next_value(self):
+        #Get last 20 days
+        last_20_days = self.dataset[-self.n_input:]
+        last_20_days_scaled = self.scaler.transform(last_20_days)
+
+        x_test = []
+        x_test.append(last_20_days_scaled) 
+
+        x_test = np.array(x_test)
+        x_test = np.reshape(x_test, (x_test.shape[0], self.n_input, self.n_features))
+
+        #Predicted value
+        pred_value = self.model.predict(x_test)
+        pred_value = self.scaler.inverse_transform(pred_value)
+
+        return pred_value[0]
+
+    def launch_janus(self):
+        #Step1: Initialize Environment Variables
+        self.__initialize_dataset_variables()
+        #Step2: Scale Data Between 0 And 1
+        self.__scale_data()
+        #Step3: Create Training Dataset
+        self.__create_training_dataset()
+        #Step4: Build The RNN LSTM Model
+        self.__build_lstm_model()
+        #step5: Train The Model
+        self.__train_lstm_model()
+
+    def __initialize_dataset_variables(self):
+        data = self.data_frame.filter([self.field])
         self.dataset = data.values
-        self.trainingDataLen = math.ceil(len(self.dataset) * 0.7)
-        self.nInput = math.ceil(self.trainingDataLen * 0.3)
-        
-    def scaleData(self):
-        self.scaledData = self.scaler.fit_transform(self.dataset)
+        self.training_data_len = math.ceil(len(self.dataset) * 0.7)
+        self.n_input = math.ceil(self.training_data_len * 0.3)
+      
+    def __scale_data(self):
+        self.scaled_data = self.scaler.fit_transform(self.dataset)
     
-    def createTrainingDataset(self):
+    def __create_training_dataset(self):
         #Create Training data set
-        trainData = self.scaledData[0:self.trainingDataLen, :]
+        train_data = self.scaled_data[0:self.training_data_len, :]
 
-        for i in range(self.nInput, len(trainData)):
-            self.xTrain.append(trainData[i - self.nInput:i, 0])
-            self.yTrain.append(trainData[i, 0])
+        for i in range(self.n_input, len(train_data)):
+            self.x_train.append(train_data[i - self.n_input:i, 0])
+            self.y_train.append(train_data[i, 0])
 
         #Make training datasets into arrays with numpy
-        self.xTrain = np.array(self.xTrain)
-        self.yTrain = np.array(self.yTrain)
+        self.x_train = np.array(self.x_train)
+        self.y_train = np.array(self.y_train)
 
-        self.xTrain = np.reshape(self.xTrain, (self.xTrain.shape[0], self.nInput, self.nFeatures))
+        self.x_train = np.reshape(
+            self.x_train,
+            (self.x_train.shape[0], self.n_input, self.n_features))
 
-    def buildLstmModel(self):
+    def __build_lstm_model(self):
         #Build LSTM model
         self.model = Sequential()
-        self.model.add(LSTM(self.lstmDimentions, return_sequences=True, input_shape=(self.nInput, self.nFeatures)))
-        self.model.add(LSTM(self.lstmDimentions, return_sequences=False))
-        self.model.add(Dense(self.firstDenseLayer))
-        self.model.add(Dense(self.secondDenseLayer))
+        self.model.add(LSTM(
+            self.lstm_dimentions,
+            return_sequences=True,
+            input_shape=(self.n_input, self.n_features)))
+        self.model.add(LSTM(self.lstm_dimentions, return_sequences=False))
+        self.model.add(Dense(self.first_dense_layer))
+        self.model.add(Dense(self.second_dense_layer))
 
         #Compile Model
         self.model.compile(optimizer='adam', loss='mean_squared_error')
 
-    def trainLstmModel(self):
+    def __train_lstm_model(self):
         #Train Model
-        self.model.fit(self.xTrain, self.yTrain, batch_size=self.batchSize, epochs=self.epochSize)
-        self.isModelTrained = True
-
-    def getRmse(self):
-        #Create testing dataset
-        testData = self.scaledData[self.trainingDataLen - self.nInput:, :]
-        #Create x_test, y_test
-        xTest = []
-        yTest = self.dataset[self.trainingDataLen:, :]
-
-        for i in range(self.nInput, len(testData)):
-            xTest.append(testData[i - self.nInput:i, 0])
-
-        #Convert data to a numpy array
-        xTest = np.array(xTest)
-
-        #Reshape data to 3 dimentional because LSTM expects 3 dimensional
-        xTest = np.reshape(xTest, (xTest.shape[0], self.nInput, self.nFeatures))
-
-        #Get model's predicted values
-        predictions = self.model.predict(xTest)
-        predictions = self.scaler.inverse_transform(predictions)
-
-        #Get the mean squared error RMSE
-        return np.sqrt(np.mean(((predictions- yTest)**2)))
-
-    def predictNextValue(self):
-        #Get last 20 days 
-        last20Days = self.dataset[-self.nInput:]
-        last20DaysScaled = self.scaler.transform(last20Days)
-
-        xTest = []
-        xTest.append(last20DaysScaled) 
-
-        xTest = np.array(xTest)
-        xTest = np.reshape(xTest, (xTest.shape[0], self.nInput, self.nFeatures))
-
-        #Predicted value
-        predValue = self.model.predict(xTest)
-        predValue = self.scaler.inverse_transform(predValue)
-
-        return predValue[0]
-
-    def launchJanus(self):
-        #Step1: Initialize Environment Variables
-        self.initializeDatasetVariables()
-        #Step2: Scale Data Between 0 And 1
-        self.scaleData()
-        #Step3: Create Training Dataset
-        self.createTrainingDataset()
-        #Step4: Build The RNN LSTM Model
-        self.buildLstmModel()
-        #step5: Train The Model
-        self.trainLstmModel()
+        self.model.fit(
+            self.x_train,
+            self.y_train,
+            batch_size=self.batch_size,
+            epochs=self.epoch_size)
+        self.is_model_trained = True

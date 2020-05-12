@@ -1,5 +1,1 @@
-[MASTER]
-disable=
-    C0114, # missing-module-docstring
-
 print(test.shape[0])  # pylint: disable=E1136  # pylint/issues/3139
