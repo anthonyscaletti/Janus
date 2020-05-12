@@ -37,5 +37,6 @@ func (postDataHandler *PostDataHandler) ServeHTTP(w http.ResponseWriter, r *http
 		return
 	}
 
-	fmt.Fprintf(w, string(dataJSON))
+	w.Header().Set("Content-Type", "application/json")
+	w.Write(dataJSON)
 }
