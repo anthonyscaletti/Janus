@@ -1,7 +1,8 @@
 package main
 
 import (
-	resthandler "handler/rest"
+	//resthandler "handler/rest"
+	januscontroller "controller"
 )
 
 func main() {
@@ -11,5 +12,7 @@ func main() {
 //Janus Initialization
 func initializeJanus() {
 	//Initialize REST Handler
-	resthandler.LaunchRestHandler()
+	//resthandler.LaunchRestHandler()
+
+	januscontroller.LaunchJanusEngine()
 }
