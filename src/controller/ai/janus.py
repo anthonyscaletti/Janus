@@ -89,7 +89,7 @@ class Janus:
         return np.sqrt(np.mean(((predictions- y_test)**2)))
 
     def predict_next_value(self):
-        #Get last 20 days
+        #Get last 20 days 
         last_20_days = self.dataset[-self.n_input:]
         last_20_days_scaled = self.scaler.transform(last_20_days)
 
