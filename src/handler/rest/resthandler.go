@@ -1,4 +1,4 @@
-package resthandler
+package rest
 
 import (
 	"fmt"
@@ -12,9 +12,13 @@ func LaunchRestHandler() {
 	const defaultPort string = "5000"
 	router := http.NewServeMux()
 
+	//Post Data Handler
+	postDataHandler := &PostDataHandler{}
+
 	//Routes
 	router.Handle("/", entryHandler("/"))
 	router.Handle("/entry/", entryHandler("/entry/"))
+	router.Handle("/api/post/data", postDataHandler)
 
 	//Server
 	port := os.Getenv("PORT")
