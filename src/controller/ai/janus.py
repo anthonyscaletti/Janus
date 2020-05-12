@@ -88,11 +88,10 @@ class Janus:
         #Get the mean squared error RMSE
         return np.sqrt(np.mean(((predictions- y_test)**2)))
 
-    def predict_next_values(self, dayCount):
-        predictions = []
+    def predict_next_values(self, day_count):
         dataset = self.dataset[-self.n_input:]
 
-        for i in range(dayCount):
+        for i in range(day_count):
             #Get last n input days 
             last_n_days = dataset[-self.n_input:]
             last_n_days_scaled = self.scaler.transform(last_n_days)
@@ -111,7 +110,7 @@ class Janus:
             temp.append(pred_value[0].tolist())
             dataset = pd.DataFrame(temp).values
 
-        return dataset.tolist()
+        return dataset[-day_count:].flatten().tolist()
 
     def launch_janus(self):
         #Step1: Initialize Environment Variables
