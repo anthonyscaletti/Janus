@@ -18,7 +18,7 @@ func LaunchRestHandler() {
 	//Routes
 	router.Handle("/", entryHandler("/"))
 	router.Handle("/entry/", entryHandler("/entry/"))
-	router.Handle("/api/post/data", postDataHandler)
+	router.Handle("/api/janus/post/", postDataHandler)
 
 	//Server
 	port := os.Getenv("PORT")
