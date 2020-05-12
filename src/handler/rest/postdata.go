@@ -5,6 +5,7 @@ import (
 	"entity"
 	"fmt"
 	"net/http"
+	"usecase"
 )
 
 //PostDataHandler : Handle Incoming Data To Be Predicted
@@ -26,7 +27,7 @@ func (postDataHandler *PostDataHandler) ServeHTTP(w http.ResponseWriter, r *http
 	}
 
 	//TODO: Send Data To ML Model
-
+	response := usecase.LaunchJanus(&data)
 	//TODO: Return Predicted Data as Response
-	fmt.Fprintf(w, "Data: %+v", data)
+	fmt.Fprintf(w, "Data: %+v", response)
 }
