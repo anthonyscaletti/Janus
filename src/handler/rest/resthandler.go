@@ -2,14 +2,13 @@ package rest
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 	"os"
 )
 
 //LaunchRestHandler : REST Handler Initialization
 func LaunchRestHandler() {
-	const defaultPort string = "5000"
+	const defaultPort string = "4000"
 	router := http.NewServeMux()
 
 	//Post Data Handler
@@ -27,13 +26,12 @@ func LaunchRestHandler() {
 		port = defaultPort
 	}
 
-	log.Println(fmt.Sprintf("Listening at port: %v", port))
 	http.ListenAndServe(fmt.Sprintf(":%v", port), router)
 }
 
 //API Entry Page
 func entryHandler(prefix string) http.Handler {
-	fs := http.StripPrefix(prefix, http.FileServer(http.Dir("../static"))) //DEV PATH
+	fs := http.StripPrefix(prefix, http.FileServer(http.Dir("/go/static"))) //DEV PATH
 
 	return fs
 }
