@@ -69,6 +69,7 @@ RUN go install -v ./...
 FROM python:3.7.7-buster
 
 #Install Dependencies
+RUN pip install -U tensorflow
 RUN pip install -U Keras
 RUN pip install -U numpy
 RUN pip install -U sklearn
