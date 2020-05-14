@@ -17,7 +17,7 @@ func ExecuteJanusEngine(data *entity.Data) entity.Data {
 		return response
 	}
 
-	cmd := exec.Command("python", "../controller/ai/janus-entry.py", string(dataJSON))
+	cmd := exec.Command("python", "/go/ai/janus-entry.py", string(dataJSON))
 
 	out, err := cmd.Output()
 	if err != nil {

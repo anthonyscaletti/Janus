@@ -50,7 +50,7 @@ RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
 COPY /src/controller/ /go/src/controller/
-COPY /src/controller/ai /go/src/controller/ai
+COPY /src/controller/ai /go/ai
 COPY /src/entity /go/src/entity
 COPY /src/handler/rest /go/src/handler/rest
 COPY /src/usecase /go/src/usecase
@@ -117,6 +117,7 @@ ENV PATH $GOPATH/bin:/usr/local/go/bin:$PATH
 RUN mkdir -p "$GOPATH/src" "$GOPATH/bin" && chmod -R 777 "$GOPATH"
 WORKDIR $GOPATH
 
+COPY --from=build-stage /go/ai /go/ai
 COPY --from=build-stage /go/static /go/static
 COPY --from=build-stage /go/bin /go/bin
 
