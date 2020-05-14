@@ -68,6 +68,12 @@ RUN go install -v ./...
 #Second Stage
 FROM python:3.7.7-buster
 
+#Install Dependencies
+RUN pip install -U Keras
+RUN pip install -U numpy
+RUN pip install -U sklearn
+RUN pip install -U pandas
+
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
 		g++ \
