@@ -1,4 +1,4 @@
-FROM buildpack-deps:buster-scm AS build-stage
+FROM python:3.7.7-buster AS build-stage
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
@@ -66,7 +66,7 @@ RUN go get -d -v ./...
 RUN go install -v ./...
 
 #Second Stage
-FROM buildpack-deps:buster-scm
+FROM python:3.7.7-buster
 
 # gcc for cgo
 RUN apt-get update && apt-get install -y --no-install-recommends \
